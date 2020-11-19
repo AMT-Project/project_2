@@ -19,6 +19,11 @@ services:
 
     api:
         build: docker/api
+        # https://www.datanovia.com/en/fr/courses/forcer-docker-compose-a-attendre-que-les-dependances-soient-pretes/
+        # La solution intermédiaire est d’ajouter restart : always
+        # à la configuration de notre application, pour réessayer
+        # jusqu’à ce que la base de données commence à répondre
+        restart: always
         container_name: apirest
         ports:
           - "8080:8080"
