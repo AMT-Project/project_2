@@ -1,7 +1,26 @@
 version: "3.7"
 services:
+
+    gamification_db:
+     image: mysql:8.0.18
+     container_name: gamification_db
+     command: --default-authentication-plugin=mysql_native_password
+     restart: always
+     ports:
+       - 9907:3307
+     volumes:
+       - ./docker/gamification_db:/docker-entrypoint-initdb.d
+     environment:
+       MYSQL_ROOT_PASSWORD: pwd
+       MYSQL_DATABASE: AMT-gamification_db
+       MYSQL_USER: gamification-db-user
+       MYSQL_PASSWORD: gamification-db-pwd
+       TZ: "Europe/Zurich"
+
     api:
         build: docker/api
         container_name: apirest
         ports:
           - "8080:8080"
+        depends_on:
+          - gamification_db

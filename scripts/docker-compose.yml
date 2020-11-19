@@ -3,4 +3,4 @@ services:
     api:
         image: ghcr.io/amt-project/trainingrest/apirest
         ports:
-            - "8080:8080"
+          - "8080:8080"
