@@ -22,7 +22,7 @@ paths:
             #get:
             # description: get the list of all applications
             #operationId: getApplications
-          #responses:
+            #responses:
           #  '200':
           #   description: success
           #  content:
@@ -249,4 +249,6 @@ components:
                 pointScale:
                   type: string
                 amount:
+                  type: integer
+                amountToGet:
                   type: integer

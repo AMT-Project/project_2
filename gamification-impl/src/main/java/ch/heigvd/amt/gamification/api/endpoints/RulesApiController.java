@@ -48,6 +48,7 @@ public class RulesApiController implements RulesApi {
         entity.setAwardBadge(rule.getThen().getAwardBadge());
         entity.setAwardPoints(rule.getThen().getAwardPoints().getPointScale());
         entity.setAmount(rule.getThen().getAwardPoints().getAmount());
+        entity.setAmountToGet(rule.getThen().getAwardPoints().getAmountToGet());
         return entity;
     }
 
@@ -64,6 +65,7 @@ public class RulesApiController implements RulesApi {
         RuleThenAwardPoints ruleThenAwardPoints = new RuleThenAwardPoints();
         ruleThenAwardPoints.setPointScale(entity.getAwardPoints());
         ruleThenAwardPoints.setAmount(entity.getAmount());
+        ruleThenAwardPoints.setAmountToGet(entity.getAmountToGet());
         ruleThen.setAwardPoints(ruleThenAwardPoints);
 
         return rule;
