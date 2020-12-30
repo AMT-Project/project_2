@@ -9,5 +9,5 @@ public interface BadgeRewardRepository extends CrudRepository<BadgeRewardEntity,
     //List<BadgeRewardEntity> findAllByUserEntity(UserEntity userEntity);
     //BadgeEntity findByApplicationEntityAndName(ApplicationEntity applicationEntity, String name);
 
-    BadgeEntity findByBadgeEntityAndUserEntity(BadgeEntity badgeEntity, UserEntity userEntity);
+    BadgeRewardEntity findByBadgeEntityAndUserEntity(BadgeEntity badgeEntity, UserEntity userEntity);
 }
