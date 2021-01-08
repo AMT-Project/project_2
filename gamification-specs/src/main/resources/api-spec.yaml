@@ -270,7 +270,7 @@ components:
     Event:
       type: object
       properties:
-        userId:
+        appUserId:
           type: string
         timestamp:
           type: string

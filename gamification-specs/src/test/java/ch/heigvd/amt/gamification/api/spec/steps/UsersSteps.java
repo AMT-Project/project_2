@@ -49,7 +49,7 @@ public class UsersSteps {
         event = new Event().properties(eventProperties)
                 //.timestamp();
                 .eventType("mockType")
-                .userId(userId);
+                .appUserId(userId);
 
         user = new User().appUserId(userId);
     }

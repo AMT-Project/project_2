@@ -30,16 +30,15 @@ public class EventProcessorService {
     private RuleRepository ruleRepository;
 
     public long processEvent(EventEntity eventEntity) {
-        // TODO appUserID
-        String eventUserId = eventEntity.getUserId(); // TODO : plutot userName que userID... et pourquoi pas utiliser ID ?
+        String eventAppUserId = eventEntity.getAppUserId();
         ApplicationEntity applicationEntity = eventEntity.getApplicationEntity();
 
         // Récupère l'utilisateur à partir de l'Event
-        UserEntity user = userRepository.findByAppUserIdAndApplicationEntity(eventUserId, applicationEntity);
+        UserEntity user = userRepository.findByAppUserIdAndApplicationEntity(eventAppUserId, applicationEntity);
         // S'il n'existe pas encore on le créé
         if(user == null) {
             user = new UserEntity();
-            user.setAppUserId(eventUserId);
+            user.setAppUserId(eventAppUserId);
             user.setApplicationEntity(eventEntity.getApplicationEntity());
             user.setNbBadges(0);
             userRepository.save(user);
@@ -86,8 +85,8 @@ public class EventProcessorService {
                 }
             }
 
-            // Attribue un badge si la Rule l'indique et si on le bon nombre de points
-            if(badgeEntityOfApp != null && userPoints >= ruletoApply.getAmountToGet()) {
+            // Attribue un badge si la Rule l'indique
+            if(badgeEntityOfApp != null) {
                 // La règle attribue un badge à l'utilisateur
                 BadgeRewardEntity badgeRewardEntity = new BadgeRewardEntity();
                 badgeRewardEntity.setBadgeEntity(badgeEntityOfApp);
