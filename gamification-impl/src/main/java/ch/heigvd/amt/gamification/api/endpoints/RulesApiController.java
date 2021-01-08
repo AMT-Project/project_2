@@ -28,6 +28,10 @@ public class RulesApiController implements RulesApi {
 
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Void> createRule(@ApiParam(value = "", required = true) @Valid @RequestBody Rule rule) {
+        if(rule.getThen().getAwardPoints().getAmount() < 0 || rule.getThen().getAwardPoints().getAmount() > rule.getThen().getAwardPoints().getAmountToGet()
+                || rule.getThen().getAwardPoints().getAmountToGet() % rule.getThen().getAwardPoints().getAmount() != 0){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
         RuleEntity newRuleEntity = toRuleEntity(rule);
         newRuleEntity.setApplicationEntity((ApplicationEntity) request.getAttribute("applicationEntity"));
         ruleRepository.save(newRuleEntity);
