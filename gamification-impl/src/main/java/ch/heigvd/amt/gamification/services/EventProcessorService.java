@@ -62,8 +62,8 @@ public class EventProcessorService {
              }
         }
 
-        // Si on a déjà obtenu tous les badges de chaque palier on quitte
-        if(isPossessed != null){
+        // Si on a déjà obtenu tous les badges de chaque palier ou qu'il n'y a pas de règle à appliquer
+        if(isPossessed != null || ruletoApply == null){
             return user.getId();
         }
 
