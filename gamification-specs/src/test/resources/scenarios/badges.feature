@@ -52,15 +52,15 @@ Feature: Basic operations on badges
     Then I receive a 409 status code
 
 
-  Scenario: check app can't see badges from other apps
+  Scenario: check app can't see badges from other apps / 2 apps can create a badge with the same payload
     #Post 1
     Given I have successfully registered my app
     Given I have a badge payload
     When I POST the badge payload to the /badges endpoint
     Then I receive a 201 status code
+
     #Post 2
     Given I have successfully registered my app
-    Given I have a badge payload
     When I POST the badge payload to the /badges endpoint
     Then I receive a 201 status code
 

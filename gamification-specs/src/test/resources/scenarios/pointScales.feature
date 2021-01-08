@@ -45,15 +45,15 @@ Feature: Basic operations on point scales
     Then I receive a 409 status code
 
 
-  Scenario: check app can't see pointScales from other apps
+  Scenario: check app can't see pointScales from other apps / 2 apps can create a pointScale with the same payload
     #Post 1
     Given I have successfully registered my app
     Given I have a pointScale payload
     When I POST the pointScale payload to the /pointScales endpoint
     Then I receive a 201 status code
+
     #Post 2
     Given I have successfully registered my app
-    Given I have a pointScale payload
     When I POST the pointScale payload to the /pointScales endpoint
     Then I receive a 201 status code
 
