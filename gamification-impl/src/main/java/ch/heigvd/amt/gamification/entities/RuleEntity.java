@@ -18,6 +18,7 @@ public class RuleEntity implements Serializable {
     private String awardBadge;
     private String awardPoints;
     private int amount;
+    private int amountToGet;
 
     @ManyToOne
     private ApplicationEntity applicationEntity;

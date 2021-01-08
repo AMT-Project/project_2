@@ -1,6 +1,8 @@
 package ch.heigvd.amt.gamification.repositories;
 
 import ch.heigvd.amt.gamification.entities.PointRewardEntity;
+import ch.heigvd.amt.gamification.entities.PointScaleEntity;
+import ch.heigvd.amt.gamification.entities.UserEntity;
 import ch.heigvd.amt.gamification.repositories.projections.LeaderboardProjection;
 import ch.heigvd.amt.gamification.repositories.projections.PointScaleScoreProjection;
 import org.springframework.data.jpa.repository.Query;
@@ -11,7 +13,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 public interface PointRewardRepository extends CrudRepository<PointRewardEntity, Long> {
-    //List<PointRewardEntity> findAllByUserEntityAndPointScaleEntity(UserEntity userEntity, PointScaleEntity pointScaleEntity);
+    List<PointRewardEntity> findAllByUserEntityAndPointScaleEntity(UserEntity userEntity, PointScaleEntity pointScaleEntity);
 
     @Query(value = "SELECT Users.app_user_id AS `appUserId`, SUM(PointsReward.points) AS `pointsSum` " +
         "FROM point_reward_entity AS PointsReward " +

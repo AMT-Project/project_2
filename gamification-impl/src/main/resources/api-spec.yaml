@@ -270,7 +270,7 @@ components:
     Event:
       type: object
       properties:
-        userId:
+        appUserId:
           type: string
         timestamp:
           type: string
@@ -312,6 +312,8 @@ components:
                 pointScale:
                   type: string
                 amount:
+                  type: integer
+                amountToGet:
                   type: integer
     LeaderboardEntry:
       type: object

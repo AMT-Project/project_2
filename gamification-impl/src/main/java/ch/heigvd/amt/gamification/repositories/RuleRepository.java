@@ -9,5 +9,5 @@ import java.util.List;
 
 public interface RuleRepository extends CrudRepository<RuleEntity, Long> {
     List<RuleEntity> findAllByApplicationEntity(ApplicationEntity applicationEntity);
-    List<RuleEntity> findAllByApplicationEntityAndEventType(ApplicationEntity applicationEntity, String eventType);
+    List<RuleEntity> findAllByApplicationEntityAndEventTypeOrderByAmountToGetAsc(ApplicationEntity applicationEntity, String eventType);
 }
