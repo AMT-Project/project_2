@@ -25,7 +25,7 @@ public class ApiAuthFilter implements javax.servlet.Filter {
         HttpServletResponse res = (HttpServletResponse) response;
 
         // White list of URLs accessible publicly
-        if(req.getRequestURI().startsWith("/swagger") || req.getRequestURI().startsWith("/v3") /*|| req.getRequestURI().startsWith("/applications")*/) {
+        if(req.getRequestURI().startsWith("/swagger") || req.getRequestURI().startsWith("/v3") || req.getRequestURI().equals("/") /*|| req.getRequestURI().startsWith("/applications")*/) {
             chain.doFilter(request, response);
         }
 
