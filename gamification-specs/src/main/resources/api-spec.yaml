@@ -277,13 +277,6 @@ components:
           format: date-time
         eventType:
           type: string
-        properties:
-          type: object
-          properties:
-            subType:
-              type: string
-            quantity:
-              type: integer
     User:
       type: object
       properties:

@@ -4,7 +4,6 @@ import ch.heigvd.amt.gamification.ApiException;
 import ch.heigvd.amt.gamification.ApiResponse;
 import ch.heigvd.amt.gamification.api.DefaultApi;
 import ch.heigvd.amt.gamification.api.dto.Event;
-import ch.heigvd.amt.gamification.api.dto.EventProperties;
 import ch.heigvd.amt.gamification.api.spec.helpers.Environment;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;
@@ -32,14 +31,11 @@ public class EventsSteps {
 
     @Given("I have an event payload")
     public void i_have_an_event_payload() {
-        EventProperties eventProperties = new EventProperties()
-                .quantity(0)
-                .subType("mockPropertyType");
 
-        event = new Event().properties(eventProperties)
-                //.timestamp();
-                .eventType("mockType")
-                .appUserId("mockUserIs");
+        event = new Event()
+            //.timestamp();
+            .eventType("mockType")
+            .appUserId("mockUserIs");
     }
 
     @When("I POST the event payload to the \\/events endpoint")
@@ -47,7 +43,7 @@ public class EventsSteps {
         try {
             lastApiResponse = api.createEventWithHttpInfo(event);
             environment.processApiResponse(lastApiResponse);
-        } catch (ApiException e) {
+        } catch(ApiException e) {
             environment.processApiException(e);
         }
     }
