@@ -48,45 +48,44 @@ public class EventProcessorService {
         List<RuleEntity> eventRulesOfType = ruleRepository.findAllByApplicationEntityAndEventTypeOrderByAmountToGetAsc(applicationEntity, eventEntity.getEventType());
         RuleEntity ruletoApply = null;
         BadgeEntity badgeEntityOfApp = null;
-        BadgeRewardEntity isPossessed = null;
+
+        int userPoints = 0;
         for(RuleEntity ruleOfType : eventRulesOfType) {
              ruletoApply = ruleOfType;
+             PointScaleEntity pointScaleEntityOfApp = pointScaleRepository.findByApplicationEntityAndName(applicationEntity, ruletoApply.getAwardPoints());
              badgeEntityOfApp = badgeRepository.findByApplicationEntityAndName(applicationEntity, ruleOfType.getAwardBadge());
              System.out.println(ruleOfType.getAwardBadge());
 
-             isPossessed = badgeRewardRepository.findByBadgeEntityAndUserEntity(badgeEntityOfApp, user);
-
-             if(badgeEntityOfApp != null && isPossessed == null){
-                 break;
-             }
-        }
-
-        // Si on a déjà obtenu tous les badges de chaque palier ou qu'il n'y a pas de règle à appliquer
-        if(isPossessed != null || ruletoApply == null){
-            return user.getId();
-        }
-
-            PointScaleEntity pointScaleEntityOfApp = pointScaleRepository.findByApplicationEntityAndName(applicationEntity, ruletoApply.getAwardPoints());
-            int userPoints = 0;
-
             // Attribuer des points si la Rule l'indique
             if(pointScaleEntityOfApp != null) {
+                userPoints = 0;
                 // La règle attribue des points à l'utilisateur sur la pointScale définie
                 PointRewardEntity pointRewardEntity = new PointRewardEntity();
                 pointRewardEntity.setPointScaleEntity(pointScaleEntityOfApp);
                 pointRewardEntity.setUserEntity(user);
                 pointRewardEntity.setTimestamp(LocalDateTime.now());
                 pointRewardEntity.setPoints(ruletoApply.getAmount());
-                pointRewardRepository.save(pointRewardEntity);
 
                 List<PointRewardEntity> userPointRewardEntityList = pointRewardRepository.findAllByUserEntityAndPointScaleEntity(user, pointScaleEntityOfApp);
-                for(PointRewardEntity userPointRewardEntity : userPointRewardEntityList) {
+                for (PointRewardEntity userPointRewardEntity : userPointRewardEntityList) {
                     userPoints += userPointRewardEntity.getPoints();
                 }
-            }
 
-            // Attribue un badge si la Rule l'indique
-            if(badgeEntityOfApp != null) {
+                if (userPoints < ruletoApply.getAmountToGet()) {
+                    pointRewardRepository.save(pointRewardEntity);
+                    break;
+                }
+
+            }
+        }
+
+        // Si on a déjà obtenu tous les badges de chaque palier ou qu'il n'y a pas de règle à appliquer
+        //if(isPossessed != null || ruletoApply == null){
+        //    return user.getId();
+        //}
+
+            // Attribue un badge si la Rule l'indique et si on le bon nombre de points
+            if(badgeEntityOfApp != null && userPoints >= ruletoApply.getAmountToGet()) {
                 // La règle attribue un badge à l'utilisateur
                 BadgeRewardEntity badgeRewardEntity = new BadgeRewardEntity();
                 badgeRewardEntity.setBadgeEntity(badgeEntityOfApp);
