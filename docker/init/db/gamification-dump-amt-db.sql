@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: impl_db
--- Generation Time: Jan 08, 2021 at 03:24 PM
+-- Generation Time: Jan 16, 2021 at 05:15 PM
 -- Server version: 8.0.22
 -- PHP Version: 7.4.11
 
@@ -38,7 +38,9 @@ CREATE TABLE `application_entity` (
 --
 
 INSERT INTO `application_entity` (`id`, `api_key`, `name`) VALUES
-(1, 'eca8983f-c4c9-4093-a975-0a2178e130ef', 'Stack');
+(1, '84af416b-cf8f-4e4f-9b4c-37eb9209e4ba', 'S7ack'),
+(2, 'fa0440b2-f1d4-4f1b-a08f-65e8cd1c65b3', 'Starbucks'),
+(3, 'c6c8f75f-543e-46da-bd02-c564c7005d31', 'Digitec');
 
 -- --------------------------------------------------------
 
@@ -58,9 +60,16 @@ CREATE TABLE `badge_entity` (
 --
 
 INSERT INTO `badge_entity` (`id`, `description`, `name`, `application_entity_id`) VALUES
-(1, 'Lorem ipsum description', 'Champion', 1),
-(2, 'Lorem ipsum description 2', 'Génie', 1),
-(3, 'Lorem ipsum description 3', 'Boss', 1);
+(1, 'Vous avez posté votre premier commentaire', 'First', 1),
+(2, 'Vous avez posé votre première question', 'Besoin d\'aide', 1),
+(3, 'Vous avez posé votre 10ème question', 'Novice', 1),
+(4, 'Vous avez posé votre 100ème question', 'Amateur', 1),
+(5, 'Vous avez donné votre 10ème réponse', 'Expérimenté', 1),
+(6, 'Vous avez donné votre 50ème réponse', 'Expert', 1),
+(7, 'Vous avez donné votre 100ème réponse', 'Connaisseur', 1),
+(8, 'Vous avez donné votre 10ème commentaire', 'Fanboy', 1),
+(9, 'Vous avez donné votre 100ème commentaire', 'Communautariste', 1),
+(10, 'Vous avez donné votre 500ème réponse', 'Einstein', 1);
 
 -- --------------------------------------------------------
 
@@ -75,6 +84,17 @@ CREATE TABLE `badge_reward_entity` (
   `user_entity_id` bigint DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+--
+-- Dumping data for table `badge_reward_entity`
+--
+
+INSERT INTO `badge_reward_entity` (`id`, `timestamp`, `badge_entity_id`, `user_entity_id`) VALUES
+(1, '2021-01-16 17:14:06.090086', 1, 1),
+(2, '2021-01-16 17:14:21.645486', 2, 1),
+(3, '2021-01-16 17:14:22.873986', 3, 1),
+(4, '2021-01-16 17:14:24.035258', 4, 1),
+(5, '2021-01-16 17:14:27.331648', 5, 1);
+
 -- --------------------------------------------------------
 
 --
@@ -83,9 +103,9 @@ CREATE TABLE `badge_reward_entity` (
 
 CREATE TABLE `event_entity` (
   `id` bigint NOT NULL,
+  `app_user_id` varchar(255) DEFAULT NULL,
   `event_type` varchar(255) DEFAULT NULL,
   `timestamp` datetime(6) DEFAULT NULL,
-  `user_id` varchar(255) DEFAULT NULL,
   `application_entity_id` bigint DEFAULT NULL,
   `badge_entity_id` bigint DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -103,6 +123,17 @@ CREATE TABLE `point_reward_entity` (
   `point_scale_entity_id` bigint DEFAULT NULL,
   `user_entity_id` bigint DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `point_reward_entity`
+--
+
+INSERT INTO `point_reward_entity` (`id`, `points`, `timestamp`, `point_scale_entity_id`, `user_entity_id`) VALUES
+(1, 1, '2021-01-16 17:14:06.064469', 3, 1),
+(2, 1, '2021-01-16 17:14:21.621051', 1, 1),
+(3, 1, '2021-01-16 17:14:22.858943', 1, 1),
+(4, 10, '2021-01-16 17:14:24.014577', 1, 1),
+(5, 1, '2021-01-16 17:14:27.316686', 2, 1);
 
 -- --------------------------------------------------------
 
@@ -122,8 +153,9 @@ CREATE TABLE `point_scale_entity` (
 --
 
 INSERT INTO `point_scale_entity` (`id`, `description`, `name`, `application_entity_id`) VALUES
-(1, 'Echelle de points pour les questions', 'QuestionPS', 1),
-(2, 'Echelle de points pour les réponses', 'AnswerPS', 1);
+(1, 'Echelle de points pour les questions', 'Questions', 1),
+(2, 'Echelle de points pour les réponses', 'Réponses', 1),
+(3, 'Echelle de points pour les commentaires', 'Commentaires', 1);
 
 -- --------------------------------------------------------
 
@@ -134,24 +166,29 @@ INSERT INTO `point_scale_entity` (`id`, `description`, `name`, `application_enti
 CREATE TABLE `rule_entity` (
   `id` bigint NOT NULL,
   `amount` int NOT NULL,
+  `amount_to_get` int NOT NULL,
   `award_badge` varchar(255) DEFAULT NULL,
   `award_points` varchar(255) DEFAULT NULL,
   `event_type` varchar(255) DEFAULT NULL,
   `name` varchar(255) DEFAULT NULL,
-  `application_entity_id` bigint DEFAULT NULL,
-  `amount_to_get` int NOT NULL
+  `application_entity_id` bigint DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `rule_entity`
 --
 
-INSERT INTO `rule_entity` (`id`, `amount`, `award_badge`, `award_points`, `event_type`, `name`, `application_entity_id`, `amount_to_get`) VALUES
-(1, 10, 'Champion', 'questionPS', 'question', 'question palier 1', 1, 100),
-(2, 50, 'Génie', 'questionPS', 'question', 'question palier 2', 1, 1000),
-(3, 100, 'Boss', 'questionPS', 'question', 'question palier 3', 1, 10000),
-(4, 5, 'Champion', 'answerPS', 'answer', 'answer palier 1', 1, 50),
-(5, 10, 'Génie', 'answerPS', 'answer', 'answer palier 2', 1, 300);
+INSERT INTO `rule_entity` (`id`, `amount`, `amount_to_get`, `award_badge`, `award_points`, `event_type`, `name`, `application_entity_id`) VALUES
+(1, 1, 10, 'Novice', 'Questions', 'question', '10ème question', 1),
+(2, 10, 100, 'Amateur', 'Questions', 'question', '100ème question', 1),
+(3, 1, 10, 'Fanboy', 'Commentaires', 'comment', '10ème commentaire', 1),
+(4, 10, 100, 'Communautariste', 'Commentaires', 'comment', '100ème commentaire', 1),
+(5, 1, 1, 'First', 'Commentaires', 'comment', '1er commentaire', 1),
+(6, 1, 1, 'Besoin d\'aide', 'Questions', 'question', '1ère question', 1),
+(7, 1, 10, 'Expérimenté', 'Réponses', 'answer', '10ème réponse', 1),
+(8, 10, 50, 'Expert', 'Réponses', 'answer', '50ème réponse', 1),
+(9, 10, 100, 'Connaisseur', 'Réponses', 'answer', '100ème réponse', 1),
+(10, 25, 500, 'Einstein', 'Réponses', 'answer', '500ème réponse', 1);
 
 -- --------------------------------------------------------
 
@@ -165,6 +202,13 @@ CREATE TABLE `user_entity` (
   `nb_badges` int NOT NULL,
   `application_id` bigint NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `user_entity`
+--
+
+INSERT INTO `user_entity` (`id`, `app_user_id`, `nb_badges`, `application_id`) VALUES
+(1, 'c53ed5d3-1efd-409f-a139-8d3bdef43c96', 5, 1);
 
 --
 -- Indexes for dumped tables
@@ -236,19 +280,19 @@ ALTER TABLE `user_entity`
 -- AUTO_INCREMENT for table `application_entity`
 --
 ALTER TABLE `application_entity`
-  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `badge_entity`
 --
 ALTER TABLE `badge_entity`
-  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `badge_reward_entity`
 --
 ALTER TABLE `badge_reward_entity`
-  MODIFY `id` bigint NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `event_entity`
@@ -260,25 +304,25 @@ ALTER TABLE `event_entity`
 -- AUTO_INCREMENT for table `point_reward_entity`
 --
 ALTER TABLE `point_reward_entity`
-  MODIFY `id` bigint NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `point_scale_entity`
 --
 ALTER TABLE `point_scale_entity`
-  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `rule_entity`
 --
 ALTER TABLE `rule_entity`
-  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `user_entity`
 --
 ALTER TABLE `user_entity`
-  MODIFY `id` bigint NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- Constraints for dumped tables
