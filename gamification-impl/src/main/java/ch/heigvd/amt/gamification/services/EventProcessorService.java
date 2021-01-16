@@ -5,12 +5,10 @@ import ch.heigvd.amt.gamification.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.Console;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.TreeSet;
 
 @Service
 public class EventProcessorService {
@@ -78,23 +76,24 @@ public class EventProcessorService {
                     pointRewardRepository.save(pointRewardEntity);
                     pointscales.add(ruletoApply.getAwardPoints());
                 }
+
+                // Attribue un badge si on a pas atteint la fin du pallier, si la Rule l'indique et si on le bon nombre de points
+                if(pointscales.contains(ruletoApply.getAwardPoints()) && badgeEntityOfApp != null && userPoints + ruleOfType.getAmount() >= ruletoApply.getAmountToGet()) {
+                    // La règle attribue un badge à l'utilisateur
+                    BadgeRewardEntity badgeRewardEntity = new BadgeRewardEntity();
+                    badgeRewardEntity.setBadgeEntity(badgeEntityOfApp);
+                    badgeRewardEntity.setUserEntity(user);
+                    badgeRewardEntity.setTimestamp(LocalDateTime.now());
+                    badgeRewardRepository.save(badgeRewardEntity);
+
+                    // Incrémente le compteur de badges de l'utilisateur
+                    int nbBadges = user.getNbBadges();
+                    user.setNbBadges(++nbBadges);
+                    userRepository.save(user);
+                }
             }
         }
 
-            // Attribue un badge si la Rule l'indique et si on le bon nombre de points
-            if(badgeEntityOfApp != null && userPoints >= ruletoApply.getAmountToGet()) {
-                // La règle attribue un badge à l'utilisateur
-                BadgeRewardEntity badgeRewardEntity = new BadgeRewardEntity();
-                badgeRewardEntity.setBadgeEntity(badgeEntityOfApp);
-                badgeRewardEntity.setUserEntity(user);
-                badgeRewardEntity.setTimestamp(LocalDateTime.now());
-                badgeRewardRepository.save(badgeRewardEntity);
-
-                // Incrémente le compteur de badges de l'utilisateur
-                int nbBadges = user.getNbBadges();
-                user.setNbBadges(++nbBadges);
-                userRepository.save(user);
-            }
         return user.getId();
     }
 }
