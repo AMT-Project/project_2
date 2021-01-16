@@ -7,7 +7,10 @@ import org.springframework.stereotype.Service;
 
 import java.io.Console;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 @Service
 public class EventProcessorService {
@@ -48,8 +51,8 @@ public class EventProcessorService {
         List<RuleEntity> eventRulesOfType = ruleRepository.findAllByApplicationEntityAndEventTypeOrderByAmountToGetAsc(applicationEntity, eventEntity.getEventType());
         RuleEntity ruletoApply = null;
         BadgeEntity badgeEntityOfApp = null;
-
         int userPoints = 0;
+        Set<String> pointscales = new HashSet<>();
         for(RuleEntity ruleOfType : eventRulesOfType) {
              ruletoApply = ruleOfType;
              PointScaleEntity pointScaleEntityOfApp = pointScaleRepository.findByApplicationEntityAndName(applicationEntity, ruletoApply.getAwardPoints());
@@ -71,18 +74,12 @@ public class EventProcessorService {
                     userPoints += userPointRewardEntity.getPoints();
                 }
 
-                if (userPoints < ruletoApply.getAmountToGet()) {
+                if (!pointscales.contains(ruletoApply.getAwardPoints()) && userPoints + ruleOfType.getAmount() <= ruletoApply.getAmountToGet()) {
                     pointRewardRepository.save(pointRewardEntity);
-                    break;
+                    pointscales.add(ruletoApply.getAwardPoints());
                 }
-
             }
         }
-
-        // Si on a déjà obtenu tous les badges de chaque palier ou qu'il n'y a pas de règle à appliquer
-        //if(isPossessed != null || ruletoApply == null){
-        //    return user.getId();
-        //}
 
             // Attribue un badge si la Rule l'indique et si on le bon nombre de points
             if(badgeEntityOfApp != null && userPoints >= ruletoApply.getAmountToGet()) {
