@@ -1,66 +1,43 @@
-# TrainingREST
+# Gamification engine
+*Le Groupe 7* has developped a REST API to help you gamify your application.  Here is how you can create your own gamification engine.
 
-# Start-up services
-## Running REST-API
+## Start-up services
+The following sections will tell you how to start and test your own gamification engine if you wish to expand it.
+
+### Running REST-API
+
 ```bash
 cd scripts
 ./runREST_API.sh
 ```
 
-## Running REST-API latest (from github registry)
+### Running REST-API latest (from github registry)
 ```bash
 cd scripts
 ./pullREST_API.sh
 ```
 
-## Test REST-API
+### Test REST-API
 ```bash
-cd scripts
-./testREST_API.sh
-```
-**Note**: for faster local testing (from 1m30 to 5s), you can `cd` into `/gamification-specs`, change the url of `pom.xml` (l22) from http://api:8080 to http://localhost:8080 then run `mvn clean test`. Because this url is used in the pipeline, please donc forget to change it back when pushing to master.
-
-# Build and run the Fruit microservice
-
-You can use maven to build and run the REST API implementation from the command line. After invoking the following maven goal, the Spring Boot server will be up and running, listening for connections on port 8080.
-
-```
-cd fruits-impl/
-mvn spring-boot:run
-```
-
-You can then access:
-
-* the [API documentation](http://localhost:8080/swagger-ui.html), generated from annotations in the code
-* the [API endpoint](http://localhost:8080/), accepting GET and POST requests
-
-You can use curl to invoke the endpoints:
-
-* To retrieve the list of fruits previously created:
-
-```
-curl -X GET --header 'Accept: application/json' 'http://localhost:8080/fruits'
-```
-
-* To create a new fruit (beware that in the live documentation, there are extra \ line separators in the JSON payload that cause issues in some shells)
-
-```
-curl -X POST --header 'Content-Type: application/json' --header 'Accept: */*' -d '{
-  "colour": "red",
-  "expirationDate": "2020-11-06",
-  "expirationDateTime": "2020-11-06T05:43:27.909Z",
-  "kind": "apple",
-  "size": "small",
-  "weight": "light"
-}' 'http://localhost:8080/fruits'
-```
-
-# Test the Fruit microservice by running the executable specification
-
-You can use the Cucumber project to validate the API implementation. Do this when the server is running.
-
-```
-cd cd fruits-specs/
+cd gamification-specs
 mvn clean test
 ```
-You will see the test results in the console, but you can also open the file located in `./target/cucumber`
+
+## Use the gamification engine for your application
+
+We provide several endpoints to help you gamify your application how you want it. We provide endpoints for:
+
+* badges
+* point-scales
+* leaderboards
+* rules
+
+When your application is being used, you can update the gamification engine about your users by posting requests to the endpoint:
+
+* events
+
+You can get information about your users by using the endpoint:
+
+* users
+
+You can find a complete documentation of the api >here<.
