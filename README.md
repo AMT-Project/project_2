@@ -83,7 +83,7 @@ défaut. Ils prennent la forme de 2 scripts SQL de création base de données et
 présents pour les 2 projets dans `docker/init/db` et sont copiés dans les fichiers `docker-compose` au moyen du
 paramètre suivant :
 
-```dockerfile 
+```dockerfile
 # in file: docker-compose.yml
 volumes:
         - ./docker/init/db:/docker-entrypoint-initdb.d
@@ -120,30 +120,36 @@ Il faut penser à créer manuellement (via des requêtes curl ou via l'interface
 badges, sinon tous les évènements créés à partir d'interaction avec S7ack n'auront aucun impact sur le côté gamifié de
 notre application.
 
-### Procédure depuis GitHub Registry
+# Gamification engine
 
-// TODO : Pablo
-
-### Running REST-API latest
+### Build & run le gamification engine
 
 ```bash
 cd scripts
-./pullREST_API.sh
+sh runREST_API.sh
 ```
+
+### Run la version *latest* du gamification engine
+
+Pour utiliser l'image sur le github container registry de l'organisation *AMT-Project*:
+
+```bash
+cd scripts
+sh pullREST_API.sh
+```
+**Note**: Le nom du network généré ne permet pas l'intégration de stack avec le gamification engine s'il est lancé de cette façon.
 
 ### Test REST-API
+Une fois le gamification engine lancé (via `runREST_API.sh` ou `sh pullREST_API.sh`):
 
 ```bash
-cd scripts
-./testREST_API.sh
+cd gamification-specs
+mvn clean test
 ```
-
-**Note**: for faster local testing (from 1m30 to 5s), you can `cd` into `/gamification-specs`, change the url
-of `pom.xml` (l22) from http://api:8080 to http://localhost:8080 then run `mvn clean test`. Because this url is used in
-the pipeline, please donc forget to change it back when pushing to master.
 
 ## Problèmes rencontrés
 
 - Règles difficiles à mettre en place (pour prendre en compte les concepts de point scales, de badges et de paliers),
   notamment en ce qui concerne le lien avec les évènements internes (lorsqu'un palier est franchi à la réception d'un
   évènement, il faut pouvoir renvoyer un évènement pour traiter par exemple l'attribution d'un badge)
+- Intégration du gamification engine avec les requêtes http vers un localhost inaccessible depuis un container
