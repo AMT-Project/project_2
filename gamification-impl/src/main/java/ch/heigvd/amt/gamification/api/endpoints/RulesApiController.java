@@ -29,7 +29,7 @@ public class RulesApiController implements RulesApi {
 
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Void> createRule(@ApiParam(value = "", required = true) @Valid @RequestBody Rule rule) {
-        //Controle avec quelle event la pointscale est lié
+        //Controle avec quelle event la pointScale est liée
         List<RuleEntity> doesPointScaleExist = ruleRepository.findAllByAwardPoints(rule.getThen().getAwardPoints().getPointScale());
         System.out.println("doesPointScaleExist " + doesPointScaleExist);
         List<RuleEntity> rulesEventTypePS = null;
@@ -38,7 +38,7 @@ public class RulesApiController implements RulesApi {
         }
         System.out.println("rulesEventTypePS " + rulesEventTypePS);
 
-        //Lie le pointScale avec l'eventType la première fois qu'on crée la règle avec
+        //Lie la pointScale avec l'eventType la première fois qu'on crée la règle avec
         boolean isPointScaleAlreadyUsed = false;
         if(doesPointScaleExist != null && doesPointScaleExist.size() !=0){
             isPointScaleAlreadyUsed =  rulesEventTypePS != null && rulesEventTypePS.size() == 0;
@@ -46,7 +46,7 @@ public class RulesApiController implements RulesApi {
 
         System.out.println("isPointScaleAlreadyUsed " + isPointScaleAlreadyUsed);
 
-        // Controle si le pallier est bien unique pour le pointscale
+        // Controle si le pallier est bien unique pour la pointScale
         RuleEntity ruleStepPS = ruleRepository.findByAmountToGetAndAwardPoints(rule.getThen().getAwardPoints().getAmountToGet(), rule.getThen().getAwardPoints().getPointScale());
 
         if(isPointScaleAlreadyUsed
