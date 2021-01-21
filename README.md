@@ -2,6 +2,28 @@
 
 *Etudiants : Bonzon Ludovic, Delhomme Claire, Mercado Pablo & Vaz Afonso Vitor*
 
+*Le Groupe 7* a développé une API REST pour vous aider à gamifier votre application. Voici comment vous pouvez créer
+votre propre application gamifiée
+
+## Utiliser le moteur de gamification pour votre application
+
+Nous fournissons différents endpoints pour vous aider à gamifier votre application comme vous le souhaitez :
+
+* badges
+* point scales
+* leaderboards
+* rules
+
+Lorsque l'application est en cours d'utilisation, vous pouvez mettre à jour la gamification engine selon les
+interactions de vos utilisateurs en postant des requêtes vers l'endpoint
+
+* events
+
+Vous pouvez obtenir des informations à propos des utilisateurs en accédants aux différents endpoints commencant par
+*users
+
+De plus amples informations sont disponibles [>ici<](http://localhost:8080/v3/api-docs)
+
 ## Choix d'implémentation
 
 Utilisation d'une base de données MySQL dans les 2 projets
@@ -48,7 +70,7 @@ section comportant le score dans chaque point scale où l'utilisateur possède d
 
 - Nous n'avons pas implémenté de système de pagination pour les ressources obtenues au travers de l'API
 
-## Procédure d'exécution des projets en local
+## Procédure d'exécution avec S7ack en local
 
 ### Données "démo" via scripts SQL
 
@@ -65,7 +87,7 @@ volumes:
 
 Vous pouvez donc aisément désactiver ce paramètre pour ne pas insérer de données de démo.
 
-### Procédure de démarrage en local
+### Procédure locale
 
 Concernant la procédure de démarrage des 2 applications, il faut simplement se rendre dans les dossiers `scripts/` de
 chaque projet, et lancer dans cet ordre :
@@ -94,7 +116,7 @@ Il faut penser à créer manuellement (via des requêtes curl ou via l'interface
 badges, sinon tous les évènements créés à partir d'interaction avec S7ack n'auront aucun impact sur le côté gamifié de
 notre application.
 
-### Procédure de démarrage depuis GitHub Registry
+### Procédure depuis GitHub Registry
 
 // TODO : Pablo
 
@@ -121,51 +143,3 @@ the pipeline, please donc forget to change it back when pushing to master.
 - Règles difficiles à mettre en place (pour prendre en compte les concepts de point scales, de badges et de paliers),
   notamment en ce qui concerne le lien avec les évènements internes (lorsqu'un palier est franchi à la réception d'un
   évènement, il faut pouvoir renvoyer un évènement pour traiter par exemple l'attribution d'un badge)
-
-## Build and run the Fruit microservice
-
-You can use maven to build and run the REST API implementation from the command line. After invoking the following maven
-goal, the Spring Boot server will be up and running, listening for connections on port 8080.
-
-```
-cd fruits-impl/
-mvn spring-boot:run
-```
-
-You can then access:
-
-* the [API documentation](http://localhost:8080/swagger-ui.html), generated from annotations in the code
-* the [API endpoint](http://localhost:8080/), accepting GET and POST requests
-
-You can use curl to invoke the endpoints:
-
-* To retrieve the list of fruits previously created:
-
-```
-curl -X GET --header 'Accept: application/json' 'http://localhost:8080/fruits'
-```
-
-* To create a new fruit (beware that in the live documentation, there are extra \ line separators in the JSON payload
-  that cause issues in some shells)
-
-```
-curl -X POST --header 'Content-Type: application/json' --header 'Accept: */*' -d '{
-  "colour": "red",
-  "expirationDate": "2020-11-06",
-  "expirationDateTime": "2020-11-06T05:43:27.909Z",
-  "kind": "apple",
-  "size": "small",
-  "weight": "light"
-}' 'http://localhost:8080/fruits'
-```
-
-## Test the Fruit microservice by running the executable specification
-
-You can use the Cucumber project to validate the API implementation. Do this when the server is running.
-
-```
-cd cd fruits-specs/
-mvn clean test
-```
-
-You will see the test results in the console, but you can also open the file located in `./target/cucumber`
