@@ -55,7 +55,6 @@ public class EventProcessorService {
              ruletoApply = ruleOfType;
              PointScaleEntity pointScaleEntityOfApp = pointScaleRepository.findByApplicationEntityAndName(applicationEntity, ruletoApply.getAwardPoints());
              badgeEntityOfApp = badgeRepository.findByApplicationEntityAndName(applicationEntity, ruleOfType.getAwardBadge());
-             System.out.println(ruleOfType.getAwardBadge());
 
             // Attribuer des points si la Rule l'indique
             if(pointScaleEntityOfApp != null) {
