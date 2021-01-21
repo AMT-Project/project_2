@@ -29,24 +29,34 @@ public class RulesApiController implements RulesApi {
 
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Void> createRule(@ApiParam(value = "", required = true) @Valid @RequestBody Rule rule) {
-        //controlle avec quelle event la pointscale est lié
+        //Controle avec quelle event la pointscale est lié
         List<RuleEntity> doesPointScaleExist = ruleRepository.findAllByAwardPoints(rule.getThen().getAwardPoints().getPointScale());
         System.out.println("doesPointScaleExist " + doesPointScaleExist);
-        List<RuleEntity> EventTypePS = null;
+        List<RuleEntity> rulesEventTypePS = null;
         if(doesPointScaleExist != null){
-             EventTypePS = ruleRepository.findAllByAwardPointsAndEventType(rule.getThen().getAwardPoints().getPointScale(), rule.getIf().getEventType());
+             rulesEventTypePS = ruleRepository.findAllByAwardPointsAndEventType(rule.getThen().getAwardPoints().getPointScale(), rule.getIf().getEventType());
         }
-        System.out.println("EventTypePS " + EventTypePS);
+        System.out.println("rulesEventTypePS " + rulesEventTypePS);
 
-        //boolean pointScaleAlreadyUsed = false;
-        boolean pointScaleAlreadyUsed = EventTypePS != null && EventTypePS.size() == 0;
-        System.out.println("pointScaleAlreadyUsed " + pointScaleAlreadyUsed);
+        //Lie le pointScale avec l'eventType la première fois qu'on crée la règle avec
+        boolean isPointScaleAlreadyUsed = false;
+        if(doesPointScaleExist != null && doesPointScaleExist.size() !=0){
+            isPointScaleAlreadyUsed =  rulesEventTypePS != null && rulesEventTypePS.size() == 0;
+        }
 
-        RuleEntity ruleEntity = ruleRepository.findByAmountToGetAndAwardPoints(rule.getThen().getAwardPoints().getAmountToGet(), rule.getThen().getAwardPoints().getPointScale()); // controle si le pallier est bien unique pour le pointscale
-        if(pointScaleAlreadyUsed || ruleEntity != null || rule.getThen().getAwardPoints().getAmount() < 0 || rule.getThen().getAwardPoints().getAmount() > rule.getThen().getAwardPoints().getAmountToGet()
+        System.out.println("isPointScaleAlreadyUsed " + isPointScaleAlreadyUsed);
+
+        // Controle si le pallier est bien unique pour le pointscale
+        RuleEntity ruleStepPS = ruleRepository.findByAmountToGetAndAwardPoints(rule.getThen().getAwardPoints().getAmountToGet(), rule.getThen().getAwardPoints().getPointScale());
+
+        if(isPointScaleAlreadyUsed
+                || ruleStepPS != null
+                || rule.getThen().getAwardPoints().getAmount() < 0 || rule.getThen().getAwardPoints().getAmount() > rule.getThen().getAwardPoints().getAmountToGet()
+                || rule.getThen().getAwardPoints().getAmountToGet() == 0
                 || rule.getThen().getAwardPoints().getAmountToGet() % rule.getThen().getAwardPoints().getAmount() != 0){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+
         RuleEntity newRuleEntity = toRuleEntity(rule);
         newRuleEntity.setApplicationEntity((ApplicationEntity) request.getAttribute("applicationEntity"));
         ruleRepository.save(newRuleEntity);
