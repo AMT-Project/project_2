@@ -1,6 +1,55 @@
 version: "3.7"
+
+# pour que bashwait vienne après dessus
+networks:
+  web:
+
 services:
     api:
         image: ghcr.io/amt-project/trainingrest/apirest
+        restart: always
+        container_name: apirest
         ports:
-            - "8080:8080"
+          - 8080:8080
+        depends_on:
+          - impl_db
+        environment:
+      #    - MYSQL_HOST=impl_db
+          - DATABASE_HOST=impl_db
+          - DATABASE_NAME=amt-db
+          - DATABASE_USER=amt-usr
+          - DATABASE_PASSWORD=amt-pw
+          - DATABASE_PORT=3306
+          - SPRING_SERVER_PORT=8080
+        networks:
+          - web
+    impl_db:
+      image: mysql
+      container_name: impl_db
+      restart: always
+      ports:
+        - 3306:3306
+      environment:
+        - MYSQL_DATABASE=amt-db
+        - MYSQL_USER=amt-usr
+        - MYSQL_ROOT_PASSWORD=amt-pw
+        - MYSQL_PASSWORD=amt-pw
+      volumes:
+        - ../docker/init/db:/docker-entrypoint-initdb.d
+      expose:
+        - '3306'
+      networks:
+        - web
+
+    phpmyadmin:
+      image: phpmyadmin/phpmyadmin
+      container_name: m_phpmyadmin
+      environment:
+        - PMA_HOST=impl_db
+      restart: unless-stopped
+      ports:
+        - 8888:80
+      depends_on:
+        - impl_db
+      networks:
+        - web
