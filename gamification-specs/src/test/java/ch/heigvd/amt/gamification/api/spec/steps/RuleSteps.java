@@ -3,12 +3,14 @@ package ch.heigvd.amt.gamification.api.spec.steps;
 import ch.heigvd.amt.gamification.ApiException;
 import ch.heigvd.amt.gamification.ApiResponse;
 import ch.heigvd.amt.gamification.api.DefaultApi;
+import ch.heigvd.amt.gamification.api.dto.*;
 import ch.heigvd.amt.gamification.api.dto.Rule;
 import ch.heigvd.amt.gamification.api.dto.RuleIf;
 import ch.heigvd.amt.gamification.api.dto.RuleThen;
 import ch.heigvd.amt.gamification.api.dto.RuleThenAwardPoints;
 import ch.heigvd.amt.gamification.api.spec.helpers.Environment;
 import io.cucumber.java.en.Given;
+import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
 import static org.junit.Assert.assertNotNull;
@@ -59,5 +61,19 @@ public class RuleSteps {
             environment.processApiException(e);
         }
     }
+
+    @Then("I send a GET to the badges endpoint for URL in the userLocation header")
+    public void i_send_a_get_to_the_badges_endpoint_for_url_in_the_user_location_header() {
+        String lastReceivedUserLocationHeader = environment.getLastReceivedUserLocationHeader();
+        Integer id = Integer.parseInt(lastReceivedUserLocationHeader.substring(lastReceivedUserLocationHeader.lastIndexOf('/') + 1));
+        try {
+            lastApiResponse = api.getUserBadgesWithHttpInfo(id);
+            environment.processApiResponse(lastApiResponse);
+            lastReceivedUser = (ch.heigvd.amt.gamification.api.dto.User) lastApiResponse.getData();
+        } catch(ApiException e) {
+            environment.processApiException(e);
+        }
+    }
+
 
 }

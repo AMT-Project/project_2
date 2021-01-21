@@ -13,3 +13,13 @@ Feature: Basic operations on rules
     Given I have a rule payload
     When I POST the rule payload to the /rules endpoint
     Then I receive a 201 status code
+
+  Scenario: create a rule then earn badge
+    Given I have successfully registered my app
+    Given I have a rule payload
+    Given I have an event payload for user "userRuleTesting"
+    When I POST the rule payload to the /rules endpoint
+    Then I receive a 201 status code
+    Then I POST the event payload to the /events endpoint for user
+    Then I receive a 201 status code
+    Then I send a GET to the badges endpoint for URL in the userLocation header

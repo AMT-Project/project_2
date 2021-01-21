@@ -35,7 +35,7 @@ public class EventsSteps {
         event = new Event()
             //.timestamp();
             .eventType("mockType")
-            .appUserId("mockUserIs");
+            .appUserId("mockUserId");
     }
 
     @When("I POST the event payload to the \\/events endpoint")
