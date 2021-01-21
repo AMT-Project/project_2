@@ -17,6 +17,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import javax.servlet.ServletRequest;
 import javax.validation.Valid;
 import java.net.URI;
+import java.util.List;
 
 @Controller
 public class RulesApiController implements RulesApi {
@@ -28,10 +29,30 @@ public class RulesApiController implements RulesApi {
 
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Void> createRule(@ApiParam(value = "", required = true) @Valid @RequestBody Rule rule) {
-        if(rule.getThen().getAwardPoints().getAmount() < 0 || rule.getThen().getAwardPoints().getAmount() > rule.getThen().getAwardPoints().getAmountToGet()
+        //Controle avec quelle event la pointScale est liée
+        List<RuleEntity> doesPointScaleExist = ruleRepository.findAllByAwardPoints(rule.getThen().getAwardPoints().getPointScale());
+        List<RuleEntity> rulesEventTypePS = null;
+        if(doesPointScaleExist != null){
+             rulesEventTypePS = ruleRepository.findAllByAwardPointsAndEventType(rule.getThen().getAwardPoints().getPointScale(), rule.getIf().getEventType());
+        }
+
+        //Lie la pointScale avec l'eventType la première fois qu'on crée la règle avec
+        boolean isPointScaleAlreadyUsed = false;
+        if(doesPointScaleExist != null && doesPointScaleExist.size() !=0){
+            isPointScaleAlreadyUsed =  rulesEventTypePS != null && rulesEventTypePS.size() == 0;
+        }
+
+        // Controle si le pallier est bien unique pour la pointScale
+        RuleEntity ruleStepPS = ruleRepository.findByAmountToGetAndAwardPoints(rule.getThen().getAwardPoints().getAmountToGet(), rule.getThen().getAwardPoints().getPointScale());
+
+        if(isPointScaleAlreadyUsed
+                || ruleStepPS != null
+                || rule.getThen().getAwardPoints().getAmount() < 0 || rule.getThen().getAwardPoints().getAmount() > rule.getThen().getAwardPoints().getAmountToGet()
+                || rule.getThen().getAwardPoints().getAmountToGet() == 0 || rule.getThen().getAwardPoints().getAmount() == 0
                 || rule.getThen().getAwardPoints().getAmountToGet() % rule.getThen().getAwardPoints().getAmount() != 0){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+
         RuleEntity newRuleEntity = toRuleEntity(rule);
         newRuleEntity.setApplicationEntity((ApplicationEntity) request.getAttribute("applicationEntity"));
         ruleRepository.save(newRuleEntity);

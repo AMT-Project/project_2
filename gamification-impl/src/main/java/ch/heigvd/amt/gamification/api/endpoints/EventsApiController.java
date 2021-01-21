@@ -2,7 +2,6 @@ package ch.heigvd.amt.gamification.api.endpoints;
 
 import ch.heigvd.amt.gamification.api.EventsApi;
 import ch.heigvd.amt.gamification.api.model.Event;
-import ch.heigvd.amt.gamification.api.model.EventProperties;
 import ch.heigvd.amt.gamification.entities.ApplicationEntity;
 import ch.heigvd.amt.gamification.entities.EventEntity;
 import ch.heigvd.amt.gamification.services.EventProcessorService;
@@ -51,8 +50,6 @@ public class EventsApiController implements EventsApi {
         entity.setAppUserId(event.getAppUserId());
         entity.setTimestamp(event.getTimestamp());
         entity.setEventType(event.getEventType());
-        entity.setSubType(event.getProperties().getSubType());
-        entity.setQuantity(event.getProperties().getQuantity());
         return entity;
     }
 
@@ -61,12 +58,6 @@ public class EventsApiController implements EventsApi {
         event.setAppUserId(entity.getAppUserId());
         event.setTimestamp(entity.getTimestamp());
         event.setEventType(entity.getEventType());
-
-        EventProperties eventProperties = new EventProperties();
-        eventProperties.setSubType(entity.getSubType());
-        eventProperties.setQuantity(entity.getQuantity());
-        event.setProperties(eventProperties);
-
         return event;
     }
 }

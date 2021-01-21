@@ -4,7 +4,6 @@ import ch.heigvd.amt.gamification.ApiException;
 import ch.heigvd.amt.gamification.ApiResponse;
 import ch.heigvd.amt.gamification.api.DefaultApi;
 import ch.heigvd.amt.gamification.api.dto.Event;
-import ch.heigvd.amt.gamification.api.dto.EventProperties;
 import ch.heigvd.amt.gamification.api.dto.User;
 import ch.heigvd.amt.gamification.api.spec.helpers.Environment;
 import io.cucumber.java.en.Given;
@@ -42,14 +41,11 @@ public class UsersSteps {
 
     @Given("I have an event payload for user {string}")
     public void i_have_an_event_payload_for_user(String userId) {
-        EventProperties eventProperties = new EventProperties()
-                .quantity(0)
-                .subType("mockPropertyType");
 
-        event = new Event().properties(eventProperties)
-                //.timestamp();
-                .eventType("mockType")
-                .appUserId(userId);
+        event = new Event()
+            //.timestamp();
+            .eventType("mockType")
+            .appUserId(userId);
 
         user = new User().appUserId(userId);
     }
@@ -60,7 +56,7 @@ public class UsersSteps {
         try {
             lastApiResponse = api.createEventWithHttpInfo(event);
             environment.processApiResponse(lastApiResponse);
-        } catch (ApiException e) {
+        } catch(ApiException e) {
             environment.processApiException(e);
         }
     }
@@ -71,7 +67,7 @@ public class UsersSteps {
         try {
             lastApiResponse = api.getUsersWithHttpInfo();
             environment.processApiResponse(lastApiResponse);
-        } catch (ApiException e) {
+        } catch(ApiException e) {
             environment.processApiException(e);
         }
     }
@@ -90,7 +86,7 @@ public class UsersSteps {
             lastApiResponse = api.getUserWithHttpInfo(id);
             environment.processApiResponse(lastApiResponse);
             lastReceivedUser = (User) lastApiResponse.getData();
-        } catch (ApiException e) {
+        } catch(ApiException e) {
             environment.processApiException(e);
         }
     }

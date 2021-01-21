@@ -17,8 +17,6 @@ public class EventEntity implements Serializable {
     private String appUserId;
     private OffsetDateTime timestamp;
     private String eventType;
-    private String subType;
-    private int quantity;
 
     @ManyToOne
     private BadgeEntity badgeEntity;

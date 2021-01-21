@@ -35,6 +35,8 @@ services:
         - MYSQL_USER=amt-usr
         - MYSQL_ROOT_PASSWORD=amt-pw
         - MYSQL_PASSWORD=amt-pw
+      volumes:
+        - ./docker/init/db:/docker-entrypoint-initdb.d
       expose:
         - '3306'
       networks:
