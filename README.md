@@ -58,13 +58,17 @@ Tous les endpoints tels que définis dans [la documentation d'API](http://localh
 La page de statistiques a été agrémentée de la présence de toutes les leaderboards relatifs à une point scale présents
 dans notre application
 
-// INSERT SCREENSHOT HERE
+|Etat au démarrage de l'application|Etat après une utilisation avec la gamification API|
+|---|---|
+|![Statistiques demo](images/statsDemo.png)|![Statistiques rempli](images/statsActivity.png)|
 
 La page de profil d'un utilisateur contient désormais en plus des statistiques globales sur le nombre de quesions posées
 et de réponses données, une section comportant tous les badges reçus suite aux actions effectuées sur le site et une
 section comportant le score dans chaque point scale où l'utilisateur possède des points.
 
-// INSERT SCREENSHOT HERE
+|Etat au démarrage de l'application|Etat après une utilisation avec la gamification API   |
+|---|---|
+|![Profil vide](images/profileEmpty.png)|![Profil rempli](images/profileActivity.png)|
 
 ### Ce qui ne fonctionne pas
 
