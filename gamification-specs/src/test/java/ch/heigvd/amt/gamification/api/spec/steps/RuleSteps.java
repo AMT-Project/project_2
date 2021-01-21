@@ -4,10 +4,13 @@ import ch.heigvd.amt.gamification.ApiException;
 import ch.heigvd.amt.gamification.ApiResponse;
 import ch.heigvd.amt.gamification.api.DefaultApi;
 import ch.heigvd.amt.gamification.api.dto.*;
+import ch.heigvd.amt.gamification.api.dto.Badge;
+import ch.heigvd.amt.gamification.api.dto.Event;
 import ch.heigvd.amt.gamification.api.dto.Rule;
 import ch.heigvd.amt.gamification.api.dto.RuleIf;
 import ch.heigvd.amt.gamification.api.dto.RuleThen;
 import ch.heigvd.amt.gamification.api.dto.RuleThenAwardPoints;
+import ch.heigvd.amt.gamification.api.dto.User;
 import ch.heigvd.amt.gamification.api.spec.helpers.Environment;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -24,6 +27,10 @@ public class RuleSteps {
 
     private Rule lastReceivedRule;
     private Rule rule;
+
+    private Event event;
+    private User user;
+    private Badge badge;
 
 
     public RuleSteps(Environment environment) {
@@ -75,5 +82,52 @@ public class RuleSteps {
         }
     }
 
+    @Given("I have an event payload for event {string} user {string}")
+    public void i_have_an_event_payload_for_event_user(String type, String userId) {
+        event = new Event()
+                .eventType(type)
+                .appUserId(userId);
+
+        user = new User().appUserId(userId);
+    }
+
+    @Given("I have a rule payload if {string} then award badge {string}")
+    public void i_have_a_rule_payload_if_then_award_badge(String type, String badge) {
+        rule = new ch.heigvd.amt.gamification.api.dto.Rule()
+                .name("rule_" + type + "_" + badge)
+                ._if(new RuleIf()
+                        .eventType(type))
+                .then(new RuleThen()
+                        .awardBadge(badge)
+                        .awardPoints(new RuleThenAwardPoints()
+                                .amount(10)
+                                .amountToGet(20)
+                                .pointScale("mockPointScaleName"))
+                        );
+    }
+
+    //TODO REFACTOR
+    @When("I POST the event payload to the \\/events endpoint for rule")
+    public void i_post_the_event_payload_to_the_events_endpoint_rule() {
+        try {
+            lastApiResponse = api.createEventWithHttpInfo(event);
+            environment.processApiResponse(lastApiResponse);
+        } catch(ApiException e) {
+            environment.processApiException(e);
+        }
+    }
+
+    @When("I have successfully registered a badge named {string}")
+    public void i_have_successfully_registered_a_badge_named(String name) {
+        badge = new ch.heigvd.amt.gamification.api.dto.Badge()
+                .name(name)
+                .description("mockdesc");
+        try {
+            lastApiResponse = api.createBadgeWithHttpInfo(badge);
+            environment.processApiResponse(lastApiResponse);
+        } catch (ApiException e) {
+            environment.processApiException(e);
+        }
+    }
 
 }
