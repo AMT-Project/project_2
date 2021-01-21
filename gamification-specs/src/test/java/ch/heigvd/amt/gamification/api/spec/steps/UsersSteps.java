@@ -81,7 +81,7 @@ public class UsersSteps {
     @When("I send a GET to the URL in the userLocation header")
     public void i_send_a_get_to_the_url_in_the_user_location_header() {
         lastReceivedUserLocationHeader = environment.getLastReceivedUserLocationHeader();
-        Integer id = Integer.parseInt(lastReceivedUserLocationHeader.substring(lastReceivedUserLocationHeader.lastIndexOf('/') + 1));
+        String id = lastReceivedUserLocationHeader.substring(lastReceivedUserLocationHeader.lastIndexOf('/') + 1);
         try {
             lastApiResponse = api.getUserWithHttpInfo(id);
             environment.processApiResponse(lastApiResponse);

@@ -65,11 +65,11 @@ public class RuleSteps {
     @Then("I send a GET to the badges endpoint for URL in the userLocation header")
     public void i_send_a_get_to_the_badges_endpoint_for_url_in_the_user_location_header() {
         String lastReceivedUserLocationHeader = environment.getLastReceivedUserLocationHeader();
-        Integer id = Integer.parseInt(lastReceivedUserLocationHeader.substring(lastReceivedUserLocationHeader.lastIndexOf('/') + 1));
+        String id = lastReceivedUserLocationHeader.substring(lastReceivedUserLocationHeader.lastIndexOf('/') + 1);
         try {
             lastApiResponse = api.getUserBadgesWithHttpInfo(id);
             environment.processApiResponse(lastApiResponse);
-            lastReceivedUser = (ch.heigvd.amt.gamification.api.dto.User) lastApiResponse.getData();
+            //lastReceivedUser = (ch.heigvd.amt.gamification.api.dto.User) lastApiResponse.getData();
         } catch(ApiException e) {
             environment.processApiException(e);
         }
