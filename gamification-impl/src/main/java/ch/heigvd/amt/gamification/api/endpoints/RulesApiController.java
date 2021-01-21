@@ -17,6 +17,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import javax.servlet.ServletRequest;
 import javax.validation.Valid;
 import java.net.URI;
+import java.util.List;
 
 @Controller
 public class RulesApiController implements RulesApi {
@@ -28,7 +29,21 @@ public class RulesApiController implements RulesApi {
 
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Void> createRule(@ApiParam(value = "", required = true) @Valid @RequestBody Rule rule) {
-        if(rule.getThen().getAwardPoints().getAmount() < 0 || rule.getThen().getAwardPoints().getAmount() > rule.getThen().getAwardPoints().getAmountToGet()
+        //controlle avec quelle event la pointscale est lié
+        List<RuleEntity> doesPointScaleExist = ruleRepository.findAllByAwardPoints(rule.getThen().getAwardPoints().getPointScale());
+        System.out.println("doesPointScaleExist " + doesPointScaleExist);
+        List<RuleEntity> EventTypePS = null;
+        if(doesPointScaleExist != null){
+             EventTypePS = ruleRepository.findAllByAwardPointsAndEventType(rule.getThen().getAwardPoints().getPointScale(), rule.getIf().getEventType());
+        }
+        System.out.println("EventTypePS " + EventTypePS);
+
+        //boolean pointScaleAlreadyUsed = false;
+        boolean pointScaleAlreadyUsed = EventTypePS != null && EventTypePS.size() == 0;
+        System.out.println("pointScaleAlreadyUsed " + pointScaleAlreadyUsed);
+
+        RuleEntity ruleEntity = ruleRepository.findByAmountToGetAndAwardPoints(rule.getThen().getAwardPoints().getAmountToGet(), rule.getThen().getAwardPoints().getPointScale()); // controle si le pallier est bien unique pour le pointscale
+        if(pointScaleAlreadyUsed || ruleEntity != null || rule.getThen().getAwardPoints().getAmount() < 0 || rule.getThen().getAwardPoints().getAmount() > rule.getThen().getAwardPoints().getAmountToGet()
                 || rule.getThen().getAwardPoints().getAmountToGet() % rule.getThen().getAwardPoints().getAmount() != 0){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
