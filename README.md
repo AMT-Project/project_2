@@ -152,4 +152,4 @@ mvn clean test
 - Règles difficiles à mettre en place (pour prendre en compte les concepts de point scales, de badges et de paliers),
   notamment en ce qui concerne le lien avec les évènements internes (lorsqu'un palier est franchi à la réception d'un
   évènement, il faut pouvoir renvoyer un évènement pour traiter par exemple l'attribution d'un badge)
-- Intégration du gamification engine avec les requêtes http vers un localhost innaccessible depuis un container
+- Intégration du gamification engine avec les requêtes http vers un localhost inaccessible depuis un container
