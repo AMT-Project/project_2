@@ -6,6 +6,8 @@ import ch.heigvd.amt.gamification.api.DefaultApi;
 import ch.heigvd.amt.gamification.api.dto.*;
 import ch.heigvd.amt.gamification.api.dto.Badge;
 import ch.heigvd.amt.gamification.api.dto.Event;
+import ch.heigvd.amt.gamification.api.dto.PointScale;
+import ch.heigvd.amt.gamification.api.dto.PointScalesScores;
 import ch.heigvd.amt.gamification.api.dto.Rule;
 import ch.heigvd.amt.gamification.api.dto.RuleIf;
 import ch.heigvd.amt.gamification.api.dto.RuleThen;
@@ -16,6 +18,11 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
+import java.text.SimpleDateFormat;
+import java.time.OffsetDateTime;
+import java.util.*;
+
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 public class RuleSteps {
@@ -86,7 +93,8 @@ public class RuleSteps {
     public void i_have_an_event_payload_for_event_user(String type, String userId) {
         event = new Event()
                 .eventType(type)
-                .appUserId(userId);
+                .appUserId(userId)
+                .timestamp(OffsetDateTime.now());
 
         user = new User().appUserId(userId);
     }
@@ -104,6 +112,21 @@ public class RuleSteps {
                                 .amountToGet(20)
                                 .pointScale("mockPointScaleName"))
                         );
+    }
+
+    @Given("I have a rule payload if {string} then award badge {string}, pointsScale {string} with {int} points out of {int}")
+    public void i_have_a_rule_payload_if_then_award_badge_points_scale_with_points_out_of(String type, String badge, String pointScale, Integer amount, Integer amountToGet) {
+        rule = new ch.heigvd.amt.gamification.api.dto.Rule()
+                .name("rule_" + type + "_" + badge)
+                ._if(new RuleIf()
+                        .eventType(type))
+                .then(new RuleThen()
+                        .awardBadge(badge)
+                        .awardPoints(new RuleThenAwardPoints()
+                                .amount(amount)
+                                .amountToGet(amountToGet)
+                                .pointScale(pointScale))
+                );
     }
 
     //TODO REFACTOR
@@ -129,5 +152,47 @@ public class RuleSteps {
             environment.processApiException(e);
         }
     }
+
+    @Then("I send a GET to the \\/pointScales endpoint for URL in the userLocation header")
+    public void i_send_a_get_to_the_point_scales_endpoint_for_url_in_the_user_location_header() {
+        String lastReceivedUserLocationHeader = environment.getLastReceivedUserLocationHeader();
+        String id = lastReceivedUserLocationHeader.substring(lastReceivedUserLocationHeader.lastIndexOf('/') + 1);
+        try {
+            lastApiResponse = api.getPointScalesScoresWithHttpInfo(id);
+            environment.processApiResponse(lastApiResponse);
+            //lastReceivedUser = (ch.heigvd.amt.gamification.api.dto.User) lastApiResponse.getData();
+        } catch(ApiException e) {
+            environment.processApiException(e);
+        }
+    }
+
+    @Then("I send a GET to the \\/pointScales endpoint for user {string}")
+    public void i_send_a_get_to_the_point_scales_endpoint_for_user(String id) { try {
+            lastApiResponse = api.getPointScalesScoresWithHttpInfo(id);
+            environment.processApiResponse(lastApiResponse);
+        } catch(ApiException e) {
+            environment.processApiException(e);
+        }
+    }
+
+    @Then("I receive a pointScales named {string} with {int} points out of {int}")
+    public void i_receive_a_point_scales_named_with_points_out_of(String string, Integer amount, Integer int2) {
+        List<PointScalesScores> scoresList = (ArrayList) environment.getLastApiResponse().getData();
+        PointScalesScores score = scoresList.get(0);
+
+        assertEquals(score.getPointScale(), string);
+        assertEquals(amount, score.getScore());
+    }
+
+    @Then("I send a GET to the badges endpoint for user {string}")
+    public void i_send_a_get_to_the_badges_endpoint_for_user(String id) {
+        try {
+            lastApiResponse = api.getUserBadgesWithHttpInfo(id);
+            environment.processApiResponse(lastApiResponse);
+        } catch(ApiException e) {
+            environment.processApiException(e);
+        }
+    }
+
 
 }
