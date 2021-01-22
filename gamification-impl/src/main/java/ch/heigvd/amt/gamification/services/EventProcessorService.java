@@ -52,9 +52,9 @@ public class EventProcessorService {
         int userPoints = 0;
         Set<String> pointscales = new HashSet<>();
         for(RuleEntity ruleOfType : eventRulesOfType) {
-             ruletoApply = ruleOfType;
-             PointScaleEntity pointScaleEntityOfApp = pointScaleRepository.findByApplicationEntityAndName(applicationEntity, ruletoApply.getAwardPoints());
-             badgeEntityOfApp = badgeRepository.findByApplicationEntityAndName(applicationEntity, ruleOfType.getAwardBadge());
+            ruletoApply = ruleOfType;
+            PointScaleEntity pointScaleEntityOfApp = pointScaleRepository.findByApplicationEntityAndName(applicationEntity, ruletoApply.getAwardPoints());
+            badgeEntityOfApp = badgeRepository.findByApplicationEntityAndName(applicationEntity, ruleOfType.getAwardBadge());
 
             // Attribuer des points si la Rule l'indique
             if(pointScaleEntityOfApp != null) {
@@ -67,11 +67,11 @@ public class EventProcessorService {
                 pointRewardEntity.setPoints(ruletoApply.getAmount());
 
                 List<PointRewardEntity> userPointRewardEntityList = pointRewardRepository.findAllByUserEntityAndPointScaleEntity(user, pointScaleEntityOfApp);
-                for (PointRewardEntity userPointRewardEntity : userPointRewardEntityList) {
+                for(PointRewardEntity userPointRewardEntity : userPointRewardEntityList) {
                     userPoints += userPointRewardEntity.getPoints();
                 }
 
-                if (!pointscales.contains(ruletoApply.getAwardPoints()) && userPoints + ruleOfType.getAmount() <= ruletoApply.getAmountToGet()) {
+                if(!pointscales.contains(ruletoApply.getAwardPoints()) && userPoints + ruleOfType.getAmount() <= ruletoApply.getAmountToGet()) {
                     pointRewardRepository.save(pointRewardEntity);
                     pointscales.add(ruletoApply.getAwardPoints());
                 }

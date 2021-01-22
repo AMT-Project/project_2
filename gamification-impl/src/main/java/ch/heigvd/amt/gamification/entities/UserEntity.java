@@ -16,8 +16,5 @@ public class UserEntity implements Serializable {
     private String appUserId;
     private int nbBadges;
 
-    // TODO : Ajouter les FetchType.LAZY et JoinColumn partout ?
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "application_id", nullable = false)
     private ApplicationEntity applicationEntity;
 }

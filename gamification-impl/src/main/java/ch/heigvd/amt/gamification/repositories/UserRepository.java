@@ -12,6 +12,5 @@ public interface UserRepository extends CrudRepository<UserEntity, Long> {
 
     UserEntity findByAppUserId(String appUserId);
 
-    // TODO : Optimiser en ne passant que l'applicationId et pas toute l'application?
     UserEntity findByAppUserIdAndApplicationEntity(String appUserId, ApplicationEntity applicationEntity);
 }

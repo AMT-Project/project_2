@@ -47,7 +47,6 @@ public class UsersApiController implements UsersApi {
         return ResponseEntity.ok(users);
     }
 
-    // TODO : GET par appUserId plutôt que par gamification engine ID ? Ou carrément supprimer l'endpoint ?
     @Override
     public ResponseEntity<User> getUser(@ApiParam(value = "", required = true) @PathVariable("id") Integer id) {
         UserEntity existingUserEntity = userRepository.findById(Long.valueOf(id)).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
