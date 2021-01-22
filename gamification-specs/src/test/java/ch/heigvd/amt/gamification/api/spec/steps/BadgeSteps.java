@@ -42,8 +42,8 @@ public class BadgeSteps {
     @Given("I have a badge payload")
     public void i_have_a_badge_payload() throws Throwable {
         badge = new ch.heigvd.amt.gamification.api.dto.Badge()
-                .name("mockName")
-                .description("mockdesc");
+            .name("mockName")
+            .description("mockdesc");
     }
 
     @When("^I POST the badge payload to the /badges endpoint$")
@@ -51,7 +51,7 @@ public class BadgeSteps {
         try {
             lastApiResponse = api.createBadgeWithHttpInfo(badge);
             environment.processApiResponse(lastApiResponse);
-        } catch (ApiException e) {
+        } catch(ApiException e) {
             environment.processApiException(e);
         }
     }
@@ -66,7 +66,7 @@ public class BadgeSteps {
         try {
             lastApiResponse = api.getBadgesWithHttpInfo();
             environment.processApiResponse(lastApiResponse);
-        } catch (ApiException e) {
+        } catch(ApiException e) {
             environment.processApiException(e);
         }
     }
@@ -85,7 +85,7 @@ public class BadgeSteps {
             lastApiResponse = api.getBadgeWithHttpInfo(id);
             environment.processApiResponse(lastApiResponse);
             lastReceivedBadge = (Badge) lastApiResponse.getData();
-        } catch (ApiException e) {
+        } catch(ApiException e) {
             environment.processApiException(e);
         }
     }
@@ -98,8 +98,8 @@ public class BadgeSteps {
     @Given("I have a badge payload named {string}")
     public void i_have_a_badge_payload_named(String name) {
         badge = new ch.heigvd.amt.gamification.api.dto.Badge()
-                .name(name)
-                .description("mockdesc");
+            .name(name)
+            .description("mockdesc");
     }
 
     @Then("I receive a list of {int} badges")

@@ -50,7 +50,6 @@ public class UsersSteps {
         user = new User().appUserId(userId);
     }
 
-    //TODO refactor w method from events
     @When("I POST the event payload to the \\/events endpoint for user")
     public void i_post_the_event_payload_to_the_events_endpoint_for_user() {
         try {

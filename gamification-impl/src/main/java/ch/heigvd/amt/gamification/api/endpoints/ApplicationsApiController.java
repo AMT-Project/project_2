@@ -30,21 +30,6 @@ public class ApplicationsApiController implements ApplicationsApi {
         return ResponseEntity.status(HttpStatus.CREATED).header("X-API-KEY", newApplicationEntity.getApiKey()).build();
     }
 
-    // FIXME : Enlever l'endpoint GET sur /applications (on le laisse pour le debug)
-    /*public ResponseEntity<List<Application>> getApplications() {
-        List<Application> applications = new ArrayList<>();
-        for(ApplicationEntity applicationEntity : applicationRepository.findAll()) {
-            applications.add(toApplication(applicationEntity));
-        }
-        return ResponseEntity.ok(applications);
-    }
-
-    @Override
-    public ResponseEntity<Application> getApplication(@ApiParam(value = "", required = true) @PathVariable("id") Integer id) {
-        ApplicationEntity existingApplicationEntity = applicationRepository.findById(Long.valueOf(id)).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-        return ResponseEntity.ok(toApplication(existingApplicationEntity));
-    }*/
-
     private ApplicationEntity toApplicationEntity(ApplicationRegistration applicationRegistration) {
         ApplicationEntity entity = new ApplicationEntity();
         String apiKey = UUID.randomUUID().toString();

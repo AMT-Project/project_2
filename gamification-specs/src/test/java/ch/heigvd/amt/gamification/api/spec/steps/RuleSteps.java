@@ -129,7 +129,6 @@ public class RuleSteps {
                 );
     }
 
-    //TODO REFACTOR
     @When("I POST the event payload to the \\/events endpoint for rule")
     public void i_post_the_event_payload_to_the_events_endpoint_rule() {
         try {

@@ -47,7 +47,6 @@ public class UsersApiController implements UsersApi {
         return ResponseEntity.ok(users);
     }
 
-    // TODO : GET par appUserId plutôt que par gamification engine ID ? Ou carrément supprimer l'endpoint ?
     @Override
     public ResponseEntity<User> getUser(@ApiParam(value = "", required = true) @PathVariable("appUserId") String appUserId) {
         // Récupère l'application associée à partir de l'API Key

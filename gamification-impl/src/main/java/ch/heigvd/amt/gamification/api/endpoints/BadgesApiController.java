@@ -44,7 +44,8 @@ public class BadgesApiController implements BadgesApi {
         BadgeEntity newBadgeEntity = toBadgeEntity(badge);
         newBadgeEntity.setApplicationEntity((ApplicationEntity) request.getAttribute("applicationEntity"));
         badgeRepository.save(newBadgeEntity);
-        Long id = newBadgeEntity.getId(); // FIXME remove
+
+        Long id = newBadgeEntity.getId();
 
         URI location = ServletUriComponentsBuilder
             .fromCurrentRequest().path("/{id}")
@@ -61,7 +62,6 @@ public class BadgesApiController implements BadgesApi {
         return ResponseEntity.ok(badges);
     }
 
-    // TODO : à garder? Inutile?
     public ResponseEntity<Badge> getBadge(@ApiParam(value = "", required = true) @PathVariable("id") Integer id) {
         BadgeEntity existingBadgeEntity = badgeRepository.findById(Long.valueOf(id)).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         return ResponseEntity.ok(toBadge(existingBadgeEntity));
