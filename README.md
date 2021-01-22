@@ -36,7 +36,44 @@ Utilisation d'une base de données MySQL dans les 2 projets
 
 ### Paliers et attribution points et badges au travers des règles
 
-// TODO : Vitor
+Le système utilise les éléments suivants :
+
+* Une pointscale (représentant une échelle de points)
+* Un badge
+* Une règle
+* Et l'évenement qui activera la règle
+
+Une règle est composé des paramètres suivants :
+
+__eventType__ : Représente l'évenement qui va trigger la règle
+
+__name__ : Nom de la règle
+
+__awardBadge__ : Nom du badge que l'on va attribuer lorsqu'on arrive au palier (optionnel)
+
+__amount__ : Valeur que l'on reçoit à chaque fois que la règle est trigger. (doit être > 0)
+
+__amountToGet__ : Valeur représentant le palier (doit être > amount et un multiple entier de celui-ci).
+C'est lorsqu'on arrive à ce nombre de point, que l'on attribue le badge (si paramétré).
+On ne peut pas utiliser 2 fois la même valeur de amountToGet dans une règle partageant l'eventType et la pointscale.
+
+__pointscale__ : C'est au travers de la pointscale que l'on va cumuler les points trigger par un évenement.
+Liée à un seul type d'événement (evenType). Cette liason est faite avec le type de la première règle qui définie la pointscale.
+On ne peut donc pas utiliser une pointscale pour un autre type d'évênement auquel il a été rattaché.
+
+### Choix d'implémentation et explication
+Un évenement est déclanché via un règle et calcul des point à l'aide d'une pointscale.
+Nous pouvons donc définir un certain nombre de règles à appliquer sur un êvenement.
+Lorsqu'une règle sera trigger. Une seul règle liée à une pointscale est appliqué à la fois (trié dans l'ordre croissant de la valeur amountToGet).
+C'est pour cette raison que  le palier doit être unique à une pointscale.
+Arrivé au palier, la règle n'est plus appliqué. Et c'est la règle suivante qui sera utilisé.
+On s'assure donc de recevoir le bon nombre de point défini dans la règle lorsqu'on arrive au palier.
+
+Un règle peut avoir plusieurs pointscales différentes.
+Ainsi pour appliquer des règles simultanément, nous pouvons utiliser ce méchanisme et avoir pour chaque pointscale liée à un
+évenement, une règle appliquée lors du trigger de l'event.
+
+Une pointscale étant liée à un seul type événement on s'assure qu'un autre ne va pas interférer avec le calcul des points.
 
 ## Tests
 
