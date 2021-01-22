@@ -10,4 +10,9 @@ import java.util.List;
 public interface RuleRepository extends CrudRepository<RuleEntity, Long> {
     List<RuleEntity> findAllByApplicationEntity(ApplicationEntity applicationEntity);
     List<RuleEntity> findAllByApplicationEntityAndEventTypeOrderByAmountToGetAsc(ApplicationEntity applicationEntity, String eventType);
+    RuleEntity findByAmountToGetAndAwardPoints(int amountToGet, String pointScale);
+
+    List<RuleEntity> findAllByAwardPoints(String pointScale);
+    List<RuleEntity> findAllByAwardPointsAndEventType(String pointScale, String eventType);
+
 }

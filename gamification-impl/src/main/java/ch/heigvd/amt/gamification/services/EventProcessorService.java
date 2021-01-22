@@ -55,7 +55,6 @@ public class EventProcessorService {
              ruletoApply = ruleOfType;
              PointScaleEntity pointScaleEntityOfApp = pointScaleRepository.findByApplicationEntityAndName(applicationEntity, ruletoApply.getAwardPoints());
              badgeEntityOfApp = badgeRepository.findByApplicationEntityAndName(applicationEntity, ruleOfType.getAwardBadge());
-             System.out.println(ruleOfType.getAwardBadge());
 
             // Attribuer des points si la Rule l'indique
             if(pointScaleEntityOfApp != null) {
@@ -77,7 +76,7 @@ public class EventProcessorService {
                     pointscales.add(ruletoApply.getAwardPoints());
                 }
 
-                // Attribue un badge si on a pas atteint la fin du pallier, si la Rule l'indique et si on le bon nombre de points
+                // Attribue un badge si on a pas atteint la fin du pallier, si la Rule l'indique et si on a le bon nombre de points
                 if(pointscales.contains(ruletoApply.getAwardPoints()) && badgeEntityOfApp != null && userPoints + ruleOfType.getAmount() >= ruletoApply.getAmountToGet()) {
                     // La règle attribue un badge à l'utilisateur
                     BadgeRewardEntity badgeRewardEntity = new BadgeRewardEntity();
