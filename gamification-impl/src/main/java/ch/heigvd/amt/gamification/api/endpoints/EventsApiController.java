@@ -36,11 +36,14 @@ public class EventsApiController implements EventsApi {
         // Call to the Event Processor Service to handle events, set badges/pointScales and apply rules
         Long userId = eventProcessorService.processEvent(newEventEntity);
 
+        String userAppId = newEventEntity.getAppUserId();
+
         URI location = ServletUriComponentsBuilder
             .fromCurrentRequest().path("/{id}")
             .buildAndExpand(newEventEntity.getId()).toUri();
 
-        URI userLocation = ServletUriComponentsBuilder.fromCurrentContextPath().path("/users").path("/{id}").buildAndExpand(userId).toUri();
+        //URI userLocation = ServletUriComponentsBuilder.fromCurrentContextPath().path("/users").path("/{id}").buildAndExpand(userId).toUri();
+        URI userLocation = ServletUriComponentsBuilder.fromCurrentContextPath().path("/users").path("/{id}").buildAndExpand(userAppId).toUri();
 
         return ResponseEntity.created(location).header("userLocation", userLocation.toString()).build();
     }

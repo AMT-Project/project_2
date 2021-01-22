@@ -104,7 +104,7 @@ public class BadgeSteps {
 
     @Then("I receive a list of {int} badges")
     public void i_receive_a_list_of_badges(Integer nbBadges) {
-        List<Badge> badgeList = (ArrayList) lastApiResponse.getData();
+        List<Badge> badgeList = (ArrayList) environment.getLastApiResponse().getData();
         assertEquals((long) nbBadges, badgeList.size());
 
     }
