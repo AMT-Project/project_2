@@ -194,5 +194,15 @@ public class RuleSteps {
         }
     }
 
+    @When("I have successfully registered a pointsScale {string}")
+    public void i_have_successfully_registered_a_points_scale_with_points_out_of(String pointScale) {
+        try {
+            lastApiResponse = api.createPointScaleWithHttpInfo(new PointScale().name(pointScale));
+            environment.processApiResponse(lastApiResponse);
+        } catch (ApiException e) {
+            environment.processApiException(e);
+        }
+    }
+
 
 }
