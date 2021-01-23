@@ -71,3 +71,4 @@ Feature: Basic operations on rules
     When I check top 5 users of leaderboard for "psname2"
     Then I receive a 200 status code
     And I received no more than 5 topUsers including "userRuleTesting2"
+    And I didn't receive user "userRuleTesting"

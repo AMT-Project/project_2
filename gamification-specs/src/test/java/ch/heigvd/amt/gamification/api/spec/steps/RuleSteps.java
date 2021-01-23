@@ -227,5 +227,18 @@ public class RuleSteps {
         assertTrue(leaderboardEntryList.size() <= nbUsers);
     }
 
+    @Then("I didn't receive user {string}")
+    public void i_didn_t_receive_user(String userId) {
+        List<LeaderboardEntry> leaderboardEntryList = (ArrayList) environment.getLastApiResponse().getData();
+
+        boolean userFound = false;
+        for(LeaderboardEntry e : leaderboardEntryList){
+            if(e.getAppUserId().equals(userId)){
+                userFound = true;
+            }
+        }
+        assertFalse(userFound);
+    }
+
 
 }
