@@ -217,18 +217,16 @@ public class RuleSteps {
     public void i_received_no_more_than_top_users_including(Integer nbUsers, String userId){
         List<LeaderboardEntry> leaderboardEntryList = (ArrayList) environment.getLastApiResponse().getData();
 
-        boolean userFound = false;
-        for(LeaderboardEntry e : leaderboardEntryList){
-            if(e.getAppUserId().equals(userId)){
-                userFound = true;
-            }
-        }
-        assertTrue(userFound);
+        assertTrue(findUserInLeaderboard(userId));
         assertTrue(leaderboardEntryList.size() <= nbUsers);
     }
 
     @Then("I didn't receive user {string}")
     public void i_didn_t_receive_user(String userId) {
+        assertFalse(findUserInLeaderboard(userId));
+    }
+
+    private boolean findUserInLeaderboard(String userId){
         List<LeaderboardEntry> leaderboardEntryList = (ArrayList) environment.getLastApiResponse().getData();
 
         boolean userFound = false;
@@ -237,7 +235,7 @@ public class RuleSteps {
                 userFound = true;
             }
         }
-        assertFalse(userFound);
+        return userFound;
     }
 
 
