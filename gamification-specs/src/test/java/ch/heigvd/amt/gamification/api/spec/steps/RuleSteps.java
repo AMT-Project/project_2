@@ -6,6 +6,7 @@ import ch.heigvd.amt.gamification.api.DefaultApi;
 import ch.heigvd.amt.gamification.api.dto.*;
 import ch.heigvd.amt.gamification.api.dto.Badge;
 import ch.heigvd.amt.gamification.api.dto.Event;
+import ch.heigvd.amt.gamification.api.dto.LeaderboardEntry;
 import ch.heigvd.amt.gamification.api.dto.PointScale;
 import ch.heigvd.amt.gamification.api.dto.PointScalesScores;
 import ch.heigvd.amt.gamification.api.dto.Rule;
@@ -22,8 +23,7 @@ import java.text.SimpleDateFormat;
 import java.time.OffsetDateTime;
 import java.util.*;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 public class RuleSteps {
     private Environment environment;
@@ -211,6 +211,20 @@ public class RuleSteps {
         } catch (ApiException e) {
             environment.processApiException(e);
         }
+    }
+
+    @Then("I received no more than {int} topUsers including {string}")
+    public void i_received_no_more_than_top_users_including(Integer nbUsers, String userId){
+        List<LeaderboardEntry> leaderboardEntryList = (ArrayList) environment.getLastApiResponse().getData();
+
+        boolean userFound = false;
+        for(LeaderboardEntry e : leaderboardEntryList){
+            if(e.getAppUserId().equals(userId)){
+                userFound = true;
+            }
+        }
+        assertTrue(userFound);
+        assertTrue(leaderboardEntryList.size() <= nbUsers);
     }
 
 
