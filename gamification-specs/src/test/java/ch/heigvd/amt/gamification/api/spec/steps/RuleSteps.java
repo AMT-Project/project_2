@@ -203,5 +203,15 @@ public class RuleSteps {
         }
     }
 
+    @When("I check top {int} users of leaderboard for {string}")
+    public void i_check_top_users_of_leaderboard_for(Integer limit, String pointScale) {
+        try {
+            lastApiResponse = api.getLeaderboardWithHttpInfo(pointScale, limit);
+            environment.processApiResponse(lastApiResponse);
+        } catch (ApiException e) {
+            environment.processApiException(e);
+        }
+    }
+
 
 }
