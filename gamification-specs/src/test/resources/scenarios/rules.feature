@@ -68,7 +68,20 @@ Feature: Basic operations on rules
     Then I POST the event payload to the /events endpoint for rule
     Then I receive a 201 status code
 
+    #Check user appears on leaderboard
     When I check top 5 users of leaderboard for "psname2"
     Then I receive a 200 status code
     And I received no more than 5 topUsers including "userRuleTesting2"
     And I didn't receive user "userRuleTesting"
+
+     #Check leaderboard returns right number of users
+    Given I have an event payload for event "eventType2" user "userRuleTesting3"
+    Then I POST the event payload to the /events endpoint for rule
+    Then I receive a 201 status code
+
+    Given I have an event payload for event "eventType2" user "userRuleTesting4"
+    Then I POST the event payload to the /events endpoint for rule
+    Then I receive a 201 status code
+    When I check top 2 users of leaderboard for "psname2"
+    Then I receive a 200 status code
+    And I received no more than 2 topUsers including "userRuleTesting2"
