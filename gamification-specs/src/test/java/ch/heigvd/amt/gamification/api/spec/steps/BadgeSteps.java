@@ -73,7 +73,7 @@ public class BadgeSteps {
 
     @Then("I receive a {int} status code with a location header")
     public void iReceiveAStatusCodeWithALocationHeader(int expectedStatusCode) {
-        //TODO check location header
+        assertNotNull(environment.getLastReceivedLocationHeader());
         assertEquals(expectedStatusCode, environment.getLastStatusCode());
     }
 
