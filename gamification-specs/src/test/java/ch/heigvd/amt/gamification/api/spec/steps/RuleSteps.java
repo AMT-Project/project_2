@@ -6,6 +6,7 @@ import ch.heigvd.amt.gamification.api.DefaultApi;
 import ch.heigvd.amt.gamification.api.dto.*;
 import ch.heigvd.amt.gamification.api.dto.Badge;
 import ch.heigvd.amt.gamification.api.dto.Event;
+import ch.heigvd.amt.gamification.api.dto.LeaderboardEntry;
 import ch.heigvd.amt.gamification.api.dto.PointScale;
 import ch.heigvd.amt.gamification.api.dto.PointScalesScores;
 import ch.heigvd.amt.gamification.api.dto.Rule;
@@ -22,8 +23,7 @@ import java.text.SimpleDateFormat;
 import java.time.OffsetDateTime;
 import java.util.*;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 public class RuleSteps {
     private Environment environment;
@@ -201,6 +201,41 @@ public class RuleSteps {
         } catch (ApiException e) {
             environment.processApiException(e);
         }
+    }
+
+    @When("I check top {int} users of leaderboard for {string}")
+    public void i_check_top_users_of_leaderboard_for(Integer limit, String pointScale) {
+        try {
+            lastApiResponse = api.getLeaderboardWithHttpInfo(pointScale, limit);
+            environment.processApiResponse(lastApiResponse);
+        } catch (ApiException e) {
+            environment.processApiException(e);
+        }
+    }
+
+    @Then("I received no more than {int} topUsers including {string}")
+    public void i_received_no_more_than_top_users_including(Integer nbUsers, String userId){
+        List<LeaderboardEntry> leaderboardEntryList = (ArrayList) environment.getLastApiResponse().getData();
+
+        assertTrue(findUserInLeaderboard(userId));
+        assertTrue(leaderboardEntryList.size() <= nbUsers);
+    }
+
+    @Then("I didn't receive user {string}")
+    public void i_didn_t_receive_user(String userId) {
+        assertFalse(findUserInLeaderboard(userId));
+    }
+
+    private boolean findUserInLeaderboard(String userId){
+        List<LeaderboardEntry> leaderboardEntryList = (ArrayList) environment.getLastApiResponse().getData();
+
+        boolean userFound = false;
+        for(LeaderboardEntry e : leaderboardEntryList){
+            if(e.getAppUserId().equals(userId)){
+                userFound = true;
+            }
+        }
+        return userFound;
     }
 
 
