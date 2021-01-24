@@ -22,17 +22,14 @@ interactions de vos utilisateurs en postant des requêtes vers l'endpoint
 Vous pouvez obtenir des informations à propos des utilisateurs en accédants aux différents endpoints commencant par
 *users
 
-De plus amples informations sont disponibles [>ici<](http://localhost:8080/v3/api-docs)
+De plus amples informations sont disponibles [>ici<](http://localhost:8080/)
 
 ## Choix d'implémentation
 
-Utilisation d'une base de données MySQL dans les 2 projets
-
-...
+Utilisation d'une base de données MySQL dans les 2 projets.
 
 ### Lien entre serveur S7ack et serveur de gamification
-
-// INSERT DIAGRAMME DE CLASSES HERE ???
+L'application est authentifiée auprès du serveur de gamification avec son X-API-KEY unique.
 
 ### Paliers et attribution points et badges au travers des règles
 
@@ -76,12 +73,25 @@ Ainsi pour appliquer des règles simultanément, nous pouvons utiliser ce mécha
 Une pointscale étant liée à un seul type événement on s'assure qu'un autre ne va pas interférer avec le calcul des points.
 
 ## Tests
+Réalisés avec Cucumber.
 
-// TODO : Claire
+Fonctionnalités testées :
+- Enregistrement d'applications
+- Badges
+- Echelles de point
+- Règles
+- Envoi d'événements
+- Utilisateurs
+- Leaderboards
 
-### Ce qui a été testé
+En particulier :
+- Les applications n'ont pas accès aux données d'autres applications
+- Lors de l'envoi d'un événement, un utilisateur est créé ou modifié
+- Lors de l'envoi d'un événement soumis à une règle, l'utilisateur reçoit des points sur une échelle de point 
+- Lorsque l'échelle de points est complète, l'utilisateur reçoit un badge.
 
-### Comment
+Pour l'exécution des tests, voir la [procédure locale](#test-rest-api).
+
 
 ## État du projet
 
@@ -190,3 +200,6 @@ mvn clean test
   notamment en ce qui concerne le lien avec les évènements internes (lorsqu'un palier est franchi à la réception d'un
   évènement, il faut pouvoir renvoyer un évènement pour traiter par exemple l'attribution d'un badge)
 - Intégration du gamification engine avec les requêtes http vers un localhost inaccessible depuis un container
+
+## Ce qui a été ajouté depuis la présentation
+- Ajout d'un test Cucumber sur les leaderboards.
